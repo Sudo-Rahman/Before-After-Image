@@ -6,7 +6,7 @@ A simple library to compare two images with a slider.
 
 ## Demo
 
-
+https://github.com/Sudo-Rahman/BeforeAfterImage/assets/85690773/a7422cca-f6fe-4e1b-8fa9-e020fdadd764
 
 ## Gradle Dependency
 
