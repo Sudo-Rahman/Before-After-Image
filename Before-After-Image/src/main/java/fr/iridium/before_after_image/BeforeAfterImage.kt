@@ -44,7 +44,7 @@ private fun BeforeAfterImage(
     afterImage: @Composable () -> Unit = {},
     beforeText: String = "Before",
     afterText: String = "After",
-    enableThumbBoder: Boolean = true
+    enableThumbBorder: Boolean = true
 ) {
 
     var offset by remember { mutableFloatStateOf(0.5f) }
@@ -57,16 +57,21 @@ private fun BeforeAfterImage(
         }, label = ""
     )
 
-    Box(modifier = modifier, contentAlignment = Alignment.TopCenter) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .drawWithContent {
-                clipRect(right = size.width * if (animate) animationOffset else offset) {
-                    this@drawWithContent.drawContent()
-                }
-            }) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .drawWithContent {
+                    clipRect(right = size.width * if (animate) animationOffset else offset) {
+                        this@drawWithContent.drawContent()
+                    }
+                }) {
             beforeImage()
-            Surface(color = Color.Transparent,
+            Surface(
+                color = Color.Transparent,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(16.dp)
@@ -80,15 +85,17 @@ private fun BeforeAfterImage(
                 Text(text = beforeText, style = TextStyle(color = Color.White))
             }
         }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .drawWithContent {
-                clipRect(left = size.width * if (animate) animationOffset else offset) {
-                    this@drawWithContent.drawContent()
-                }
-            }) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .drawWithContent {
+                    clipRect(left = size.width * if (animate) animationOffset else offset) {
+                        this@drawWithContent.drawContent()
+                    }
+                }) {
             afterImage()
-            Surface(color = Color.Transparent,
+            Surface(
+                color = Color.Transparent,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(16.dp)
@@ -121,10 +128,11 @@ private fun BeforeAfterImage(
                     interactionSource = remember { MutableInteractionSource() },
                     thumbSize = DpSize(30.dp, 30.dp),
                     colors = SliderDefaults.colors(
-                        thumbColor = Color.White.copy(alpha = 0.6f),
+                        thumbColor = Color.White.copy(alpha = 0.6f)
                     ),
-                    modifier = if (enableThumbBoder) Modifier.border(
-                        2.dp, Color.Black.copy(alpha = 0.6f), RoundedCornerShape(100)
+                    modifier = if (enableThumbBorder) Modifier.border(
+                        2.dp, Color.Black.copy(alpha = 0.6f),
+                        RoundedCornerShape(100)
                     ) else Modifier
                 )
             },
@@ -139,7 +147,7 @@ fun BeforeAfterImage(
     modifier: Modifier = Modifier,
     beforeText: String = "Before",
     afterText: String = "After",
-    enableThumbBoder: Boolean = true
+    enableThumbBorder: Boolean = true
 ) {
     BeforeAfterImage(
         beforeImage = {
@@ -161,7 +169,7 @@ fun BeforeAfterImage(
         modifier = modifier,
         beforeText = beforeText,
         afterText = afterText,
-        enableThumbBoder = enableThumbBoder
+        enableThumbBorder = enableThumbBorder
     )
 }
 
@@ -172,7 +180,7 @@ fun BeforeAfterImage(
     modifier: Modifier = Modifier,
     beforeText: String = "Before",
     afterText: String = "After",
-    enableThumbBoder: Boolean = true
+    enableThumbBorder: Boolean = true
 ) {
     BeforeAfterImage(
         beforeImage = {
@@ -194,6 +202,6 @@ fun BeforeAfterImage(
         modifier = modifier,
         beforeText = beforeText,
         afterText = afterText,
-        enableThumbBoder = enableThumbBoder
+        enableThumbBorder = enableThumbBorder
     )
 }
