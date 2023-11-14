@@ -28,9 +28,8 @@ class MainActivity : ComponentActivity() {
                         .padding(16.dp)
                         .clip(shape = RoundedCornerShape(16.dp)),
                     beforeImage = beforeImage,
-                    afterImage = afterImage
+                    afterImage = afterImage,
                 )
-
             }
         }
     }

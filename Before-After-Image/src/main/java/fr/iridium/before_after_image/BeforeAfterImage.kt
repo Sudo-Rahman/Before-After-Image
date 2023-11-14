@@ -42,11 +42,12 @@ private fun BeforeAfterImage(
     modifier: Modifier = Modifier,
     beforeImage: @Composable () -> Unit = {},
     afterImage: @Composable () -> Unit = {},
-    beforeText: String = "Before",
-    afterText: String = "After",
-    enableThumbBorder: Boolean = true
+    beforeLabel: String,
+    afterLabel: String,
+    thumb: @Composable () -> Unit
 ) {
 
+//    for animation
     var offset by remember { mutableFloatStateOf(0.5f) }
     var animate by remember { mutableStateOf(false) }
     val animationOffset by animateFloatAsState(
@@ -58,31 +59,30 @@ private fun BeforeAfterImage(
     )
 
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.TopCenter
+        modifier = modifier, contentAlignment = Alignment.TopCenter
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawWithContent {
-                    clipRect(right = size.width * if (animate) animationOffset else offset) {
-                        this@drawWithContent.drawContent()
-                    }
-                }) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .drawWithContent {
+                clipRect(right = size.width * if (animate) animationOffset else offset) {
+                    this@drawWithContent.drawContent()
+                }
+            }) {
             beforeImage()
-            Surface(
-                color = Color.Transparent,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(16.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable {
-                        offset = 1f
-                        animate = true
-                    }
-                    .padding(horizontal = 8.dp, vertical = 4.dp)) {
-                Text(text = beforeText, style = TextStyle(color = Color.White))
+            if (beforeLabel.isNotEmpty()) {
+                Surface(color = Color.Transparent,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp)
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            offset = 1f
+                            animate = true
+                        }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Text(text = beforeLabel, style = TextStyle(color = Color.White))
+                }
             }
         }
         Box(
@@ -94,19 +94,20 @@ private fun BeforeAfterImage(
                     }
                 }) {
             afterImage()
-            Surface(
-                color = Color.Transparent,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable {
-                        offset = 0f
-                        animate = true
-                    }
-                    .padding(horizontal = 8.dp, vertical = 4.dp)) {
-                Text(text = afterText, style = TextStyle(color = Color.White))
+            if (afterLabel.isNotEmpty()) {
+                Surface(color = Color.Transparent,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            offset = 0f
+                            animate = true
+                        }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Text(text = afterLabel, style = TextStyle(color = Color.White))
+                }
             }
         }
         Slider(
@@ -124,17 +125,7 @@ private fun BeforeAfterImage(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp),
             thumb = {
-                SliderDefaults.Thumb(
-                    interactionSource = remember { MutableInteractionSource() },
-                    thumbSize = DpSize(30.dp, 30.dp),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color.White.copy(alpha = 0.6f)
-                    ),
-                    modifier = if (enableThumbBorder) Modifier.border(
-                        2.dp, Color.Black.copy(alpha = 0.6f),
-                        RoundedCornerShape(100)
-                    ) else Modifier
-                )
+                thumb()
             },
         )
     }
@@ -142,34 +133,28 @@ private fun BeforeAfterImage(
 
 @Composable
 fun BeforeAfterImage(
+    modifier: Modifier = Modifier,
     beforeImageUrl: String,
     afterImageUrl: String,
-    modifier: Modifier = Modifier,
-    beforeText: String = "Before",
-    afterText: String = "After",
-    enableThumbBorder: Boolean = true
+    beforeLabel: String = "Before",
+    afterLabel: String = "After",
+    thumb: @Composable () -> Unit = { CustomThumb() }
 ) {
-    BeforeAfterImage(
-        beforeImage = {
-            AsyncImage(
-                model = beforeImageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        },
-        afterImage = {
-            AsyncImage(
-                model = afterImageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        },
-        modifier = modifier,
-        beforeText = beforeText,
-        afterText = afterText,
-        enableThumbBorder = enableThumbBorder
+    BeforeAfterImage(modifier = modifier, beforeImage = {
+        AsyncImage(
+            model = beforeImageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+    }, afterImage = {
+        AsyncImage(
+            model = afterImageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+    }, beforeLabel = beforeLabel, afterLabel = afterLabel, thumb = thumb
     )
 }
 
@@ -178,30 +163,39 @@ fun BeforeAfterImage(
     beforeImage: Painter,
     afterImage: Painter,
     modifier: Modifier = Modifier,
-    beforeText: String = "Before",
-    afterText: String = "After",
-    enableThumbBorder: Boolean = true
+    beboreLabel: String = "Before",
+    afterLabel: String = "After",
+    thumb: @Composable () -> Unit = { CustomThumb() }
 ) {
-    BeforeAfterImage(
-        beforeImage = {
-            Image(
-                painter = beforeImage,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        },
-        afterImage = {
-            Image(
-                painter = afterImage,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        },
-        modifier = modifier,
-        beforeText = beforeText,
-        afterText = afterText,
-        enableThumbBorder = enableThumbBorder
+    BeforeAfterImage(modifier = modifier, beforeImage = {
+        Image(
+            painter = beforeImage,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }, afterImage = {
+        Image(
+            painter = afterImage,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }, beforeLabel = beboreLabel, afterLabel = afterLabel, thumb = thumb
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CustomThumb() {
+    SliderDefaults.Thumb(
+        interactionSource = remember { MutableInteractionSource() },
+        thumbSize = DpSize(30.dp, 30.dp),
+        colors = SliderDefaults.colors(
+            thumbColor = Color.White.copy(alpha = 0.6f)
+        ),
+        modifier = Modifier.border(
+            2.dp, Color.Black.copy(alpha = 0.6f), RoundedCornerShape(100)
+        )
     )
 }

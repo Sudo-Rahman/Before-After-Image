@@ -40,28 +40,30 @@ fun BeforeAfterImage(
     beforeImage: Painter,
     afterImage: Painter,
     modifier: Modifier = Modifier,
-    beforeText: String = "Before",
-    afterText: String = "After",
-    enableThumbBorder: Boolean = true
+    beforeLabel: String = "Before",
+    afterLabel: String = "After",
+    thumb: @Composable () -> Unit = { CustomThumb() }
 ) {}
 ```
 
 * With image url
+
 ``` kotlin
 @Composable
 fun BeforeAfterImage(
     beforeImageUrl: String,
     afterImageUrl: String,
     modifier: Modifier = Modifier,
-    beforeText: String = "Before",
-    afterText: String = "After",
-    enableThumbBorder: Boolean = true
+    beforeLabel: String = "Before",
+    afterLabel: String = "After",
+    thumb: @Composable () -> Unit = { CustomThumb() }
 ) {}
 ```
 
 ## Usage
 
 * With image on local
+
 ``` kotlin
 BeforeAfterImage(
     beforeImage = painterResource(id = R.drawable.before),
@@ -69,13 +71,13 @@ BeforeAfterImage(
     modifier = Modifier
         .fillMaxWidth()
         .height(0.3f),
-    beforeText = "Before",
-    afterText = "After",
-    enableThumbBorder = true
+    beforeLabel = "Before",
+    afterLabel = "After"
 )
 ```
 
 * With image url
+
 ``` kotlin
 BeforeAfterImage(
     beforeImageUrl = "https://exemple.com/before.jpg",
@@ -83,8 +85,7 @@ BeforeAfterImage(
     modifier = Modifier
         .fillMaxWidth()
         .height(0.3f),
-    beforeText = "Before",
-    afterText = "After",
-    enableThumbBorder = true
+    beforeLabel = "Before",
+    afterLabel = "After"
 )
 ```
