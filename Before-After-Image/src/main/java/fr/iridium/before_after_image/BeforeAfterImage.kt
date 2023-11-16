@@ -19,7 +19,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,7 +47,7 @@ private fun BeforeAfterImage(
 ) {
 
 //    for animation
-    var offset by remember { mutableFloatStateOf(0.5f) }
+    var offset by remember { mutableStateOf(0.5f) }
     var animate by remember { mutableStateOf(false) }
     val animationOffset by animateFloatAsState(
         targetValue = offset, animationSpec = tween(
@@ -61,30 +60,6 @@ private fun BeforeAfterImage(
     Box(
         modifier = modifier, contentAlignment = Alignment.TopCenter
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .drawWithContent {
-                clipRect(right = size.width * if (animate) animationOffset else offset) {
-                    this@drawWithContent.drawContent()
-                }
-            }) {
-            beforeImage()
-            if (beforeLabel.isNotEmpty()) {
-                Surface(color = Color.Transparent,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(16.dp)
-                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable {
-                            offset = 1f
-                            animate = true
-                        }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
-                    Text(text = beforeLabel, style = TextStyle(color = Color.White))
-                }
-            }
-        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,6 +82,31 @@ private fun BeforeAfterImage(
                         }
                         .padding(horizontal = 8.dp, vertical = 4.dp)) {
                     Text(text = afterLabel, style = TextStyle(color = Color.White))
+                }
+            }
+        }
+
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .drawWithContent {
+                clipRect(right = size.width * if (animate) animationOffset else offset) {
+                    this@drawWithContent.drawContent()
+                }
+            }) {
+            beforeImage()
+            if (beforeLabel.isNotEmpty()) {
+                Surface(color = Color.Transparent,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp)
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            offset = 1f
+                            animate = true
+                        }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Text(text = beforeLabel, style = TextStyle(color = Color.White))
                 }
             }
         }
